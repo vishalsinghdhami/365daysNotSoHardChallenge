@@ -1,0 +1,56 @@
+//Logic:: 
+// CPP CODE
+class Solution
+{
+    public:
+        string removeOuterParentheses(string s)
+        {
+            stack<char> stck;
+            string ans;
+            for (char i: s)
+            {
+                if (i == '(')
+                {
+                    if (stck.size() > 0)
+                    {
+                        ans += i;
+                    }
+                    stck.push(i);
+                }
+                else
+                {
+                    if (stck.size() > 1)
+                    {
+                        ans += i;
+                    }
+                    stck.pop();
+                }
+            }
+            return ans;
+        }
+};
+
+//JS CODE
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeOuterParentheses = function (s) {
+    let stackArr = [];
+    let ansstring = '';
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            if (stackArr.length > 0) {
+                ansstring += s[i];
+            }
+            stackArr.push(s[i]);
+        } else {
+            if (stackArr.length > 1) {
+                ansstring += s[i]
+            }
+            stackArr.pop();
+        }
+    }
+    return ansstring;
+};
