@@ -1,0 +1,15 @@
+Explain Hoisting?
+It’s a mechanism where variables and function declaration to the top of the scope.
+Are JavaScript initialization hoisted?
+No. It has value undefined for var and for let and const no value get intialized.
+
+Explain Temporal Dead Zone?
+TDZ it’s a period or it’s a state of a variable where variables are named in memory but they are not 
+initialized with any value. During this time if you try access the variable you will get initialized error.
+Var                       vs                              Let
+
+Scope Scoped to the                  vs             Scoped to the immediate 
+Immediate function body.                            enclosing block.
+
+Initialized value Value initialized   vs             Value initialized with nothing
+with Undefined at hoisting                          at hoisting
