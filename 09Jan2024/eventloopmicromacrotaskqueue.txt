@@ -1,0 +1,25 @@
+
+Certainly! Let's break down microtasks and macrotasks in the context of an event loop in a simple way:
+
+Event Loop:
+
+Think of the event loop as the central process that manages and executes tasks in a program.
+It continuously checks the task queue for pending tasks and executes them one by one.
+Microtasks:
+
+Micro Task:
+Microtasks are small units of work that are executed in between macrotasks.
+They are higher-priority tasks and are usually associated with promises and other asynchronous operations.
+Microtasks are processed in the same turn of the event loop, before the next macrotask.
+Macrotasks:
+
+Macro Task:
+Macrotasks are larger units of work that are usually associated with I/O operations, timers, and other events.
+They are processed one at a time, and each macrotask runs to completion before the next one is picked up.
+Examples of macrotasks include setTimeout, setInterval, and I/O operations.
+In Short:
+
+The event loop is like a traffic cop managing tasks in a program.
+Microtasks are quick, high-priority tasks dealt with immediately, while macrotasks are larger tasks processed one at a time.
+Microtasks come between macrotasks in the event loop.
+Imagine the event loop as a loop that continuously checks for tasks to do. When it finds a task, it executes it. Microtasks are like VIP tasks that get executed before regular tasks (macrotasks) in the loop
