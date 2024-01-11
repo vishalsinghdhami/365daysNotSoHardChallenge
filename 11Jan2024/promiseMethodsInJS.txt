@@ -1,0 +1,170 @@
+Methods of Promise: .all(), .any() , .finally(), .race()
+
+◼️ Promise.all() Method
+👉 The Promise.all() method accepts an iterable Object, such as an Array of promises as an input and returns a single promise that resolves to a result array of the input promises.
+👉 When all input promises have been resolved or the iterable input does not contain a promise, the returned promise will be resolved.
+👉 It rejects immediately when an input promise rejects or non-promise throws an error and will reject with that first rejection message / error message.
+👉 It is often used when there are many asynchronous tasks involved that the overall code relies on to work successfully - all of the ones we want to do before we continue to execute the code.
+👉 This method aggregates the results of multiple promises.
+# All promises resolved template
+const promise1 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 300, "resolved");
+}); //will be resolved after 300ms
+
+const promise2 = 93; //non-promise
+
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "resolved2");
+}); // will be resolved after 100ms
+
+Promise.all([promise1, promise2, promise3])
+  .then((values) => {
+    console.log(values);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+//expected output: [ 'resolved', 93, 'resolved2' ]
+
+#One promise rejected
+const pro1 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("one"), 1000);
+});
+
+const pro2 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("two"), 2000);
+});
+
+const pro3 = new Promise((resolve, reject) => {
+  setTimeout(() => reject("rejected"), 3000);
+});
+
+Promise.all([pro1, pro2, pro3])
+  .then((values) => {
+    console.log(values);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+  //expected output: rejected
+--------------------------------------------
+  ◼️ Promise.any() Method
+👉 The Promise.any() takes an iterable Object, such as an Array of promises as an input. Once a promise is fulfilled, a single promise is returned and the promise is resolved using the value of the promise.
+👉 If no promises in the iterable fulfill (if all of the given promises are rejected), then the returned promise is rejected with an AggregateError (that groups together individual errors).
+
+Fulfillment of Promise.any()
+🔹 Unlike Promise.all(), this method is used to return the first promise that fulfills.
+🔹 It is short-circuited right after a promise is completed, so as soon as a promise is fulfilled, it will not wait for other promises to complete.
+Eg1:
+const SlowlyDone = new Promise((resolve, reject) => {
+  setTimeout(resolve, 500, "Done slowly");
+}); //resolves after 500ms
+
+const QuicklyDone = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "Done quickly");
+}); //resolves after 100ms
+
+const Rejection = new Promise((resolve, reject) => {
+  setTimeout(reject, 100, "Rejected"); //always rejected
+});
+
+Promise.any([SlowlyDone, QuicklyDone, Rejection])
+  .then((value) => {
+    console.log(value);
+    //  QuicklyDone fulfils first
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+//expected output: Done quickly
+Rejection of Promise.any()
+🔹 Promise.any() rejects with an AggregateError if no promise fulfils.
+🔹 The AggregateError object represents an error when several errors need to be wrapped in a single error. It is thrown when multiple errors need to be reported by an operation.
+
+An example is shown below 👇
+const Rejection = new Promise((resolve, reject) => {
+  setTimeout(reject, 100, "Rejected"); //always rejected
+});
+
+Promise.any([Rejection])
+  .catch((err) => {
+    console.log(err);
+  });
+
+// expected output: "AggregateError: No Promise in Promise.any was resolved"
+
+
+---------------------------------------
+◼️ Promise.prototype.finally()
+👉 The finally() method returns a Promise.
+👉 When a Promise is completed, either resolved or rejected,this specified callback function is executed.
+👉 This helps to avoid duplicating code in both the promise's then() and catch() handlers.
+👉 The finally() method will help if you're going to do any processing or cleanup work once a promise is made, regardless of the outcome.
+
+The following is a simple example of this method.👇
+const addition = (a, b) =>
+  new Promise((resolve, reject) => {
+    if (typeof a == "number" && typeof b == "number") {
+      resolve(a + b);
+    } else {
+      reject("Not a Number");
+    }
+  });
+
+addition(10, 5)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+  .finally(() => {
+    console.log("Numbers are added");
+  });
+
+  /* expected output: 15
+                     Numbers are added */
+--------------------------------
+◼️ Promise.race() Method
+👉 The Promise.race() method returns a Promise that is resolved or rejected, as soon as one of the promises in an iterable, such as an array, fulfills or rejects, with the value or reason from that Promise.
+👉 The promise returned will be forever pending, if the iterable passed is empty.
+👉 Promise.race() will resolve to the first value found in the iterable, if the iterable contains one or more non-promise value or an already settled promise.
+
+Let's see an example of Promise.race() with setTimeout 👇
+const pro1 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("one"), 200);
+});
+
+const pro2 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("two"), 100);
+});
+
+Promise.race([pro1, pro2])
+  .then((response) => {
+    console.log(response); //output: two
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+const pro3 = new Promise((resolve, reject) => {
+  setTimeout(() => reject("rejected"), 300);
+});
+
+const pro4 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("four"), 400);
+});
+
+Promise.race([pro3, pro4])
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((err) => {
+    console.log(err);
+  }); //output: rejected
+
+In the first case, pro2(100ms) is faster than pro1(200ms), so the output shows two. In the second case, pro3(300ms) is faster than pro4(400ms), so the promise rejects. So basically, Promise.race() takes the first settled Promise
+
