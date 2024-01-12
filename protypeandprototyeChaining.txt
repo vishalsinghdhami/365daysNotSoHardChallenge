@@ -1,0 +1,77 @@
+
+/*
+Prototype
+A prototype in JavaScript is an object from which another object is derived from.
+
+In class based languages we have a class which contains all the properties and methods defined inside the class.
+
+When the object of the class is created the newly created object has the access to the properties and the public methods defined inside the class.
+
+Prototype is very similar to the class which acts as the blueprint of the JavaScript objects.
+
+The newly created JavaScript object has access to all the properties and methods of the prototype from which the object is created in addition to its own properties and methods.
+
+Also due to the dynamic nature of the JavaScript we can not only add properties to an object dynamically but we can also add properties to the prototype object which would mean adding a property or behavior to the base class at runtime so that all the newly created objects have access to the properties added dynamically to the prototype object.
+
+// creating an object constructor
+function Student(name,age){
+    this.name = name;
+    this.age = age;
+}
+//creating an object of type student
+let student1 = new Student('John',32)
+let student2 = new Student('Mary',32)
+
+console.log(student1);
+console.log(student2);
+
+//adding property to student1 instance dynamically
+student1.sports = 'Cricket';
+
+//adding property to the prototype of the Student
+//this would add the gender property to all the 
+//existing object instance of the Student object 
+//and would initialize it to null
+Student.prototype.gender = null
+
+// although student3 is created with name and age
+// initialized but the gender property would also 
+//be attached to it and assigned as null because 
+//of the above mentioned line of code.
+let student3 = new Student('Anna',26)
+Prototype Chaining
+Prototypes are the means of inheritance in JavaScript. The prototype of an object would also have a prototype object. This continues until we reach the top level when there is no prototype object.
+
+This is called prototype chaining or prototype chain in JavaScript.
+
+The properties defined on the prototype objects are also accessible to the object instance. And this is the reason why we are able to access properties which we have not defined explicitly on an object since those are accessible by inheritance through the prototype chaining.
+
+When we try to access any property of an object it is first checked in the own property of the object.
+
+If the property does not exist in the own property then the prototype object is scanned for that property. This continues until we get the property we are accessing or we reach at to the end of prototype chain giving undefined.
+
+Impact of Prototype Chaining on Performance
+Due to the multiple levels of prototype chaining the total time to look up a property that is at the higher level of prototype chain may have a negative impact on performance in the code where performance is of prime importance.
+
+Also there might be situations where we try to look up for a property that does not exist but since the property has to be looked up on the prototype chain until we reach the end we may end up losing time in lookup.
+
+In order to avoid such situation we can use the hasOwnProperty method which is inherited by all the objects from Object.prototype to limit the look up at a particular level.
+
+hasOwnProperty accepts the property name we are looking for and returns true or false based on whether the property is found or not.
+
+Note that the properties and the functions both are accessed as properties in a JavaScript object.
+
+// defining the constructor function
+function Student(name,age){
+    this.name = name;
+    this.age = age; 
+}
+// creating an object instance of the Student
+const student = new Student('John',32)
+
+console.log(student)
+Output
+Prototype of StudentIn the above snapshot we can see that there are two levels of prototypes chain, the first level is the prototype object of the Student constructor which also has a prototype object derived from the Object constructor which does not have a prototype object since Object is the top level of the prototype chain.
+
+We can access the prototype of the object instance by accessing the proto property of the object instance or by Object.getPrototypeOf(obj)
+ */
