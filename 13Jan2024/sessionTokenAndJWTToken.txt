@@ -1,0 +1,41 @@
+JWT Token Working
+Here's a more detailed explanation of how JWT works:
+
+Client Request: A user initiates the authentication process by sending their credentials (typically a username and password) to the server.
+
+Server Verification: The server verifies the provided credentials, ensuring they are valid. If successful, the server creates a JWT, which is essentially a JSON object containing claims about the user. These claims may include information such as the user's ID, role, or any other relevant data.
+
+Token Issued: The server signs the JWT using a secret key, creating a unique token. This token is then sent back to the client as part of the authentication response.
+
+Client Storage: The client securely stores the received JWT. Common storage locations include cookies or local storage.
+
+Subsequent Requests: For any subsequent requests to protected resources on the server, the client includes the JWT in the request header. This is often done using the "Authorization" header with the value being "Bearer" followed by the JWT.
+
+Server Validation: When the server receives a request with a JWT, it verifies the token's signature using the secret key. If the signature is valid, the server checks the claims within the token to determine if the user is authorized to access the requested resource. If the token is expired or the signature is invalid, the server denies access.
+
+JWT is widely used in authentication and authorization mechanisms, providing a stateless and scalable solution for securing web applications and APIs. Its compact format and ability to store information in a token make it efficient for transmitting data between parties while maintaining integrity and security.
+
+
+----------------------
+Session Token Working
+Session tokens are often used in stateful authentication systems. Here's how session tokens generally work:
+
+Authentication Request: When a user logs in, the server verifies their credentials (e.g., username and password).
+
+Session Creation: Upon successful authentication, the server creates a unique session identifier, often a random string or a hashed value, and associates it with the user's session data on the server-side. This session identifier is then sent back to the client, usually as a cookie in the response.
+
+Client Storage: The client stores the session identifier, typically in a cookie. This cookie is automatically sent with every subsequent request to the server, allowing the server to identify the user.
+
+Subsequent Requests: For each subsequent request to the server, the client's browser automatically includes the session identifier in the request header through the stored cookie.
+
+Server Validation: Upon receiving a request, the server checks the session identifier against its records. If a matching session is found, the server grants access to the requested resource.
+
+Session Expiry and Logout: Sessions often have an expiration time to enhance security. If a user logs out or the session expires, the server invalidates the session on the server side, and the client is required to reauthenticate for further access.
+
+Key Differences between JWT and Session Tokens:
+
+Statelessness vs. Statefulness: JWTs are stateless, meaning all necessary information is contained within the token. Session tokens rely on server-side storage and are thus stateful.
+
+Scalability: JWTs are more scalable because they don't require server-side storage of session data. Session tokens may require server-side storage, impacting scalability.
+
+Flexibility: JWTs can carry arbitrary data in the token itself. Session tokens typically require a server-side lookup to retrieve user-specific information.
