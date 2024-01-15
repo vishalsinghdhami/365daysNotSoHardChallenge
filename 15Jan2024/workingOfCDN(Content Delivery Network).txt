@@ -8,6 +8,7 @@ Domain Name System (DNS) Resolution:
 
 When a user attempts to access a website, their browser sends a DNS request to find the IP address associated with the website's domain name.
 Instead of receiving the website's original IP address, the DNS server associated with the CDN provides the IP address of the server closest to the user.
+
 Server Selection:
 
 The CDN uses a process called "load balancing" to determine which server will respond to the user's request. Factors such as server proximity, server load, and overall network conditions are considered.
