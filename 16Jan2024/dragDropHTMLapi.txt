@@ -1,0 +1,90 @@
+HTML Drag and Drop
+
+Drag and Drop is a very interactive and user-friendly concept that makes it easier to move an object to a different location by grabbing it. This allows the user to click and hold the mouse button over an element, drag it to another location, and release the mouse button to drop the element there. In HTML5 Drag and Drop are much easier to code and any element in it is draggable.
+
+Drag and Drop Events:
+
+
+1.ondrag
+
+It is used to use when the element or text selection is being dragged in HTML.
+
+2.ondragstart
+
+It is used to call a function, drag(event), that specifies what data to be dragged
+
+3.ondragenter
+
+It is used to determine whether or not the drop target is to accept the drop. If the drop is to be accepted, then this event has to be canceled.
+
+4.ondragleave
+
+It occurs when the mouse leaves an element before a valid drop target while the drag is occurring.
+
+5.ondragover
+
+It specifies where the dragged data can be dropped.
+
+6.ondrop
+
+It specifies where the drop has occurred at the end of the drag operation.
+
+7.ondragend
+
+It occurs when the user has finished dragging an element.
+
+Approach for Drag and Drop
+Set an element as draggable with the draggable attribute: <img draggable="true">.
+Specify the drag behavior using the ondragstart attribute, calling a function (drag(event)) to define the data to be dragged with event.dataTransfer.setData().
+Utilize the ondragover event to determine where the data can be dropped. Prevent default behavior with event.preventDefault() to enable the drop.
+Implement the ondrop event to perform the actual drop action.
+Example 1: This example shows the drag & drop of an image in HTML.
+
+
+<!DOCTYPE HTML>
+<html>
+   
+<head>
+    <style>
+      #getData {
+          width: 250px;
+          height: 200px;
+          padding: 10px;
+          border: 1px solid #4f4d4d;
+      }
+    </style>
+    <script>
+      function allowDrop(even) {
+          even.preventDefault();
+      }
+ 
+      function drag(even) {
+          even.dataTransfer.setData("text", even.target.id);
+      }
+ 
+      function drop(even) {
+          even.preventDefault();
+          var fetchData = even.dataTransfer.getData("text");
+          even.target.appendChild(document.getElementById(fetchData));
+      }
+    </script>
+</head>
+ 
+<body>
+    <h3>Drag the GeekforGeeks image into the rectangle:</h3>
+    <div id="getData"
+         ondrop="drop(event)"
+         ondragover="allowDrop(event)">
+      </div>
+    <br> 
+    <img id="dragData"
+         src="gfg.png"
+         draggable="true"
+         ondragstart="drag(event)"
+         width="250"
+         height="200"> 
+</body>
+   
+</html>
+Output:
+
