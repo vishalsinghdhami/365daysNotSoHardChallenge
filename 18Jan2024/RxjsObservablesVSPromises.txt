@@ -1,0 +1,152 @@
+What is a Promise?
+A JavaScript Promise is an object that produces a single value, asynchronously. Data goes in, and a single value is emitted and used. Easy, straightforward way to handle incoming data.
+
+Promises are very eager. If we had a callback function provided to a Promise, once the Promise is resolved, the .then gets executed. If we were to demonstrate that in an API call, it would look something like this:
+
+fetch('my-api-goes-here')
+  .then(resp => resp.json());
+That raises a question: are we wasting resources with that eagerness?
+
+"JavaScript Promises are very eager!"
+
+
+What is an Observable?
+An Observable takes in a stream of data and emits multiple bits of data over time.
+
+Observables are very lazy. They don't do much until called upon. Or how we like to say in the Observable world, are "subscribed" to. To create an Observable, we create a function, and this function will return the data.
+
+If we were to demonstrate an Observable, it would look something like this:
+
+const data$ = new Observable("stuff here")
+
+data$.subscribe(data => {
+  // do some stuff here
+})
+We create the Observable, and then it will wait to be subscribed to. Once that happens, it handles the data and emits whatever values get returned. So the subscribe is essential because that is what wakes the Observables up.
+
+Is that more efficient? We'll see.
+
+"Which to use? JavaScript Promises or RxJS Observables?"
+
+The Great Comparison
+Let's look at a handful of comparables between the two. Again, remember there are many different ways we could look at this, but I will be covering only five in this article.
+
+Simplicity
+The best thing about Promises is that they come built-in with JavaScript. That means we don't have to add anything to our package size. There's no third-party library, it's just there, waiting, making it pretty easy to get started with using Promises in a project.
+
+Now Observables, on the other hand, are inside of the RxJS library. We are going to have to add that third party library now. No biggie, right? Now the minified bundle size of RxJS is 45.6kB. That doesn't seem like a lot, but every byte counts when we talk about performance.
+
+Note: There is talk of adding Observables in the ECMAScript standard. That GitHub proposal can be found here.
+
+So that poses the question, is adding in the entire RxJS library worth it? It all depends on how much data we are handling, how much use we are going to get out of the Observables, and if we can make that 45.6kB worth it.
+
+If our project is small or we only need a Promise or two, maybe sticking with Promises would be worth it. It'll keep our project light and quick, and that is a goal in all web development.
+
+Unicast and Multicast
+Before we show how Promises and Observables use Unicast and Multicast, let's first discuss what they do.
+
+Unicast
+Unicast is a one-to-one communication process. That means there is one sender and one receiver for each bit of data, that's it. So if multiple receivers are there, each one will get a different line of communication, and it's own unique data sent to it even if it's the same data that gets sent out. A cool way to remember it is that unicast is "unique-cast"; every single receiver will get a "unique" bit of data.
+
+
+Multicast
+Multicast is a one-to-many communication process. Multicast has one sender and many receivers. If we had one bit of data we needed to send out, then it's as if all the receivers are on the same line and sharing that information that gets sent out.
+
+
+Unicast and Multicast in the world of Promises vs. Observables
+Promises are multicast, only. Like we talked above, Promises are very eager; they get super excited to send their information to anyone who wants it. They have that line of communication open, and anyone who jumps onto the call will hear the data.
+
+Observables are also multicast but unicast as well. By default, Observables are unicast, making every result get passed to a single, unique subscriber. But Observables allow for the developer to utilize both unicast and multicast benefits. Observables don't care; they just want to get that information out when it's subscribed to.
+
+Functionality
+So far, with this information, there are some clear benefits to using both. Another relevant comparison is the functionality of each one. They both take in data, and they both produce an output. Let's look at how Promises and Observables would each handle an API call.
+
+The Promises way
+Both Promises and Observables will "fetch" the data from the API. Let's see how Promises would handle that data.
+
+To fetch that data, we should see something like this:
+
+function fetchTheData(){
+  return fetch('my-api-call-here');
+}
+Once we have that data, let's unwrap that data in a .then so we can use it:
+
+function fetchTheData() {
+  return fetch('my-api-call-here');
+    .then(resp => resp.json()); // added line
+}
+If we wanted to, we could use an outside function to help handle the data. That would look like this:
+
+function fetchTheData() {
+  return fetch('my-api-call-here');
+    .then(resp => resp.json());
+    .then(outsideFunction); // added line
+}
+
+// our outside function
+function outsideFunction(){
+  // stuff here
+}
+Sometimes there can be a lot of data coming in, and we want to filter through it all. Let's add on the filter method and see how that would change things:
+
+function fetchTheData() {
+  return fetch('my-api-call-here');
+    .then(resp => resp.json())
+    .then(data => data.filter('callback here')) // added line
+    .then(outsideFunction);
+}
+
+function outsideFunction() {
+  // stuff here
+}
+Something we do not want to forget is that we have async/await that we could use. We can learn more about async here and await here.
+
+Now with this example, we have done three things.
+
+Grabbed data
+Unwrapped the data
+Filtered through said data
+Next, let's look at how the code would be with Observables!
+
+The Observables way
+We want to try and accomplish the same thing that we just did with the Promises. Let's fetch some data! Only this time we'll be using fromFetch that uses the Fetch API:
+
+fromFetch('my-api-call-here');
+There are many ways to unpack data from an API call, and in today's example, we'll use switchMap. The benefit of using switchMap is that it can cancel any redundant HTTP requests. There are others like map, flatMap, and concatMap but we are not going to go over those. Also, what are all these methods that we are using? We'll chat about that in a moment.
+
+fromFetch('my-api-call-here')
+  .pipe(
+    switchMap(resp => resp.json());
+  )
+Like we did with Promises, let's look at how we could filter through that data:
+
+fromFetch('my-api-call-here');
+  .pipe(
+    switchMap(resp => resp.json());
+    filter('filterstuffhere')
+  )
+Note: These must be "subscribed" to as well.
+
+Operators
+Okay, let's talk about Operators for a second. When we used switchMap, that was an RxJS Operator. Operators are what make RxJS super convenient. Adding an Operator can give a lot of complex code with just a few lines or a few words even. Operators can promote a functional way to process data and this is important from a unit testing perspective. There are many Operators, and learning or understanding them can be a steep learning curve. But once we can wrap our heads around them or at least understand a good chunk of them, we'll be shocked at how much they can do.
+
+Want to learn more about Operators? Visit this link!
+
+Functionality overview
+We have now demonstrated how to fetch data, unwrap that data, and filter through it using both Promises and Observables. Both can get the job done, but let's note that once things get more complicated, Promises need a lot of the logic written out, whereas Observables have the power of Operators. Is that a benefit? Maybe. Maybe not. With that steep learning curve and so many Operators to "filter" (😂) through, it could slow the project down.
+
+I'll leave you to decide which one you think adds the most value here.
+
+Ability to Cancel
+When a Promise or Observable is running, how do we make it stop? How do we cancel that function from continuing to run?
+
+Both can be canceled but in such different ways. Let's check them out.
+
+A Promise is not cancellable, naturally. Can it be? Yes. There is a nifty third-party library that we can add to our project that can help in canceling a Promise. If we were to look at the bluebird.js docs, it would show us exactly how to use it to cancel a Promise. We won't go over it in this article, but we can visit that link if we want to learn more.
+
+It's pretty straightforward, although it does add a lot of extra stuff to the project.
+
+With Observables, those are cancellable. Let's see how:
+
+Observable$.unsubscribe()
+And that's it! To wake up an Observable, we would .subscribe() to it, and to cancel the process, we would .unsubscribe() from it. That makes for quick and even more straightforward cancellation.
